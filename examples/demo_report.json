@@ -1,0 +1,36 @@
+{
+  "status": "REVIEW",
+  "scope": "paired binary rubric outcomes; diagnostic, not a fairness or compliance finding",
+  "pairs": 24,
+  "min_pairs": 20,
+  "groups": {
+    "A": {
+      "successes": 20,
+      "rate": 0.8333333333333334,
+      "wilson_95": [
+        0.6414692935030095,
+        0.9332132367136705
+      ]
+    },
+    "B": {
+      "successes": 12,
+      "rate": 0.5,
+      "wilson_95": [
+        0.3142742581957335,
+        0.6857257418042665
+      ]
+    }
+  },
+  "paired_difference": 0.3333333333333333,
+  "paired_bootstrap_95": [
+    0.16666666666666666,
+    0.5416666666666666
+  ],
+  "bootstrap_reps": 2000,
+  "seed": 42,
+  "flip_rate": 0.3333333333333333,
+  "a_only": 8,
+  "b_only": 0,
+  "exact_two_sided_sign_p": 0.0078125,
+  "note": "Review rubric, run conditions, sampling, abstentions, and multiple comparisons before interpreting differences."
+}
