@@ -4,12 +4,15 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "rlhf-eval-audit"
-version = "0.1.0"
+version = "0.2.0"
 description = "Paired counterfactual outcome audit for human-in-the-loop model evaluation"
 requires-python = ">=3.10"
 authors = [{name = "Iris Diane Molina"}]
 readme = "README.md"
 license = {text = "MIT"}
+
+[project.optional-dependencies]
+inspect = ["inspect-ai"]
 
 [tool.setuptools.packages.find]
 include = ["eval_audit*"]

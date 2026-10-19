@@ -12,9 +12,7 @@ class AuditError(ValueError):
 
 
 def load_pairs(path: str | Path, group_a: str, group_b: str) -> list[tuple[int, int]]:
-    if not group_a or not group_b or group_a == group_b:
-        raise AuditError("Choose two different, nonempty group labels")
-    pairs: dict[str, dict[str, int]] = {}
+    """Read and validate a CSV of matched, binary rubric outcomes."""
     try:
         with open(path, newline="", encoding="utf-8-sig") as stream:
             reader = csv.DictReader(stream)
@@ -22,21 +20,35 @@ def load_pairs(path: str | Path, group_a: str, group_b: str) -> list[tuple[int, 
                 raise AuditError("CSV must have a header without duplicate columns")
             if not {"pair_id", "group", "outcome"}.issubset(reader.fieldnames):
                 raise AuditError("CSV needs pair_id, group, outcome columns")
+            rows = []
             for line, row in enumerate(reader, start=2):
                 if None in row:
                     raise AuditError(f"Row {line}: more values than header columns")
-                pair_id, group, outcome = (row[k] for k in ("pair_id", "group", "outcome"))
-                if not pair_id or not pair_id.strip():
-                    raise AuditError(f"Row {line}: empty pair_id")
-                if group not in (group_a, group_b):
-                    raise AuditError(f"Row {line}: unexpected group {group!r}")
-                if outcome not in ("0", "1"):
-                    raise AuditError(f"Row {line}: outcome must be exactly 0 or 1")
-                if group in pairs.setdefault(pair_id, {}):
-                    raise AuditError(f"Row {line}: duplicate pair_id/group")
-                pairs[pair_id][group] = int(outcome)
+                rows.append((line, row["pair_id"], row["group"], row["outcome"]))
     except (OSError, UnicodeError, csv.Error) as exc:
         raise AuditError(f"Could not read CSV: {exc}") from exc
+    return pairs_from_rows(rows, group_a, group_b)
+
+
+def pairs_from_rows(
+    rows: list[tuple[int, str | None, str | None, str | None]],
+    group_a: str,
+    group_b: str,
+) -> list[tuple[int, int]]:
+    """Validate rows from either CSV or an evaluation-log adapter."""
+    if not group_a or not group_b or group_a == group_b:
+        raise AuditError("Choose two different, nonempty group labels")
+    pairs: dict[str, dict[str, int]] = {}
+    for line, pair_id, group, outcome in rows:
+        if not isinstance(pair_id, str) or not pair_id.strip():
+            raise AuditError(f"Row {line}: empty pair_id")
+        if group not in (group_a, group_b):
+            raise AuditError(f"Row {line}: unexpected group {group!r}")
+        if outcome not in ("0", "1"):
+            raise AuditError(f"Row {line}: outcome must be exactly 0 or 1")
+        if group in pairs.setdefault(pair_id, {}):
+            raise AuditError(f"Row {line}: duplicate pair_id/group")
+        pairs[pair_id][group] = int(outcome)
     if not pairs:
         raise AuditError("CSV has no data rows")
     missing = sum(set(v) != {group_a, group_b} for v in pairs.values())

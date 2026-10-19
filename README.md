@@ -15,6 +15,16 @@ python3 -m unittest discover -s tests -v
 
 The included dataset is **synthetic**. Its letters are fictional test variants, not demographic groups or real model responses. It deliberately contains a detectable directional difference for demonstration. The command prints a report and writes machine-readable JSON. Exit code 2 means invalid data or arguments; an observed disparity never changes the exit code.
 
+### Analyze an Inspect AI evaluation log
+
+Install Inspect separately or use `pip install '.[inspect]'`. Give each sample scalar metadata `pair_id` and `group`, and use a scorer that emits numeric `0` or `1` under a named rubric. Then run:
+
+```bash
+python3 -m eval_audit run.eval --inspect-log --scorer human_rubric --group-a A --group-b B
+```
+
+This adapter reads [Inspect sample summaries](https://inspect.aisi.org.uk/eval-logs.html#summaries), so it does not load full transcripts into the audit. It rejects unscored or errored samples, repeated pair/group records (including multiple epochs), and nonbinary scores. Reduce epochs under a documented policy before using this paired, single-outcome tool. The optional Inspect import has not been exercised against a live model or a real evaluation log in this repository.
+
 ## Input contract
 
 | Column | Meaning |
