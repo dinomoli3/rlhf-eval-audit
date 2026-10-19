@@ -6,8 +6,8 @@ The original plan was to propose paired counterfactual metrics in Inspect core. 
 
 ## Next upstream contribution
 
-1. Validate this adapter with a real Inspect `.eval` log from a small, openly licensed or synthetic evaluation. Keep prompts and personal data out of this repository unless permission is explicit.
+1. The adapter has been smoke-tested against a synthetic Inspect `.eval` log with the mock model (Inspect 0.3.282). Validate a substantive use case using openly licensed or consented data; keep prompts and personal data out of this repository unless permission is explicit.
 2. Decide whether an Inspect component or an analysis package is the right integration. The present adapter is a post-run log analyzer, not a registered Inspect scorer or a published PyPI extension.
-3. Once the integration has a demonstrable use case, propose a short entry in Inspect's community extensions listing. Follow the repository's current contribution policy and disclose AI assistance in the PR.
+3. Once the integration has a demonstrated use case, propose a short entry in Inspect's community extensions listing. Follow the repository's current contribution policy and disclose AI assistance in the PR.
 
 **Status:** the standalone project is published; no issue or pull request has been submitted upstream and no upstream acceptance is implied.

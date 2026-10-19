@@ -23,7 +23,16 @@ Install Inspect separately or use `pip install '.[inspect]'`. Give each sample s
 python3 -m eval_audit run.eval --inspect-log --scorer human_rubric --group-a A --group-b B
 ```
 
-This adapter reads [Inspect sample summaries](https://inspect.aisi.org.uk/eval-logs.html#summaries), so it does not load full transcripts into the audit. It rejects unscored or errored samples, repeated pair/group records (including multiple epochs), and nonbinary scores. Reduce epochs under a documented policy before using this paired, single-outcome tool. The optional Inspect import has not been exercised against a live model or a real evaluation log in this repository.
+This adapter reads [Inspect sample summaries](https://inspect.aisi.org.uk/eval-logs.html#summaries), so it does not load full transcripts into the audit. It rejects unscored or errored samples, repeated pair/group records (including multiple epochs), and nonbinary scores. Reduce epochs under a documented policy before using this paired, single-outcome tool. It has not been exercised against production evaluation data or real model responses.
+
+To reproduce the integration smoke test without a model API key:
+
+```bash
+python3 examples/inspect_smoke.py
+python3 -m eval_audit examples/inspect_logs/*.eval --inspect-log --scorer fixture_rubric --group-a A --group-b B
+```
+
+The smoke script uses Inspect's mock model and a preassigned fixture score. It tests log compatibility, not model behavior. This path was run successfully with Inspect AI 0.3.282; the resulting 24-pair report matched the CSV example.
 
 ## Input contract
 
